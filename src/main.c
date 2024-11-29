@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include "../include/command_exec.h"
 #include "../include/pipe_redirect.h"
 #include "../include/history_log.h"
@@ -10,6 +11,18 @@
 #define MAX_COMMAND_LENGTH 512
 #define MAX_NUM_ARGUMENTS 20
 #define MAX_PIPES 10
+
+void print_prompt() {
+    char cwd[MAX_COMMAND_LENGTH];
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        printf("%s [%02d:%02d:%02d] >>", cwd, t->tm_hour, t->tm_min, t->tm_sec);
+    } else {
+        perror("getcwd() error");
+    }
+}
 
 int main() {
     char* history[MAX_COMMAND_LENGTH];
@@ -30,14 +43,13 @@ int main() {
     // Save stdin/out for restore
     int saved_stdin = dup(STDIN_FILENO);
     int saved_stdout = dup(STDOUT_FILENO);
-    char buf[512];
 
     printf("######## Welcome to Shelldemo! ########\n");
 
     while (1) {
         is_redirect_input = 0;
         restore_io(saved_stdin, saved_stdout);
-        printf("> ");
+        print_prompt();
 
         // Get & breakdown command to argument
         if (!fgets(command, sizeof(command), stdin)) {

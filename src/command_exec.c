@@ -216,6 +216,24 @@ void handle_command(char** arguments, int arg_count, char** history, int* histor
 }
 
 int exec_extern_cmd(char** arguments) {
+    
+    if (strcmp(arguments[0], "cd") == 0) {
+        const char* dir = arguments[1];
+        if (dir == NULL) {
+            // 如果没有提供目录参数，获取 HOME 环境变量
+            dir = getenv("HOME");
+            if (dir == NULL) {
+                fprintf(stderr, "cd: HOME not set\n");
+                return -1;
+            }
+        }
+        if (chdir(dir) != 0) {
+            perror("cd");
+            return -1;
+        }
+        return 0;
+    }
+
     const char* path_env = getenv("PATH");
     char* path_copy = strdup(path_env);
     char* path_dir = strtok(path_copy, ":");
