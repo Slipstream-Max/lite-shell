@@ -66,14 +66,20 @@ int redirect_io(char** arguments, int arg_count, int* is_input_redirect, int* in
         close(input_fd);
     }
 
+    if (output_fd==-1&&input_fd==-1){
+        return 1;
+    }
+
     return 0;  // Binding success
 }
 
 void restore_io(int saved_stdin, int saved_stdout) {
     dup2(saved_stdin, STDIN_FILENO);    // Restore to stdin
     dup2(saved_stdout, STDOUT_FILENO);  // Restore to stdout
-    close(saved_stdin);
+    close(saved_stdin); 
     close(saved_stdout);
+    dup(STDIN_FILENO);    //have no idea why add this but whitout it will crash.
+    dup(STDOUT_FILENO); 
 }
 
 int exec_piped_commands(char* commands[], int num_commands) {

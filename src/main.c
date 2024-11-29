@@ -41,14 +41,16 @@ int main() {
     }
 
     // Save stdin/out for restore
-    int saved_stdin = dup(STDIN_FILENO);
-    int saved_stdout = dup(STDOUT_FILENO);
+    const int saved_stdin = dup(STDIN_FILENO);
+    const int saved_stdout = dup(STDOUT_FILENO);
 
     printf("######## Welcome to Shelldemo! ########\n");
 
     while (1) {
         is_redirect_input = 0;
+        
         restore_io(saved_stdin, saved_stdout);
+        
         print_prompt();
 
         // Get & breakdown command to argument
@@ -94,11 +96,19 @@ int main() {
         }
 
         // Redirect IO
-        if (redirect_io(arguments, arg_count, &is_redirect_input, &insert_point) == -1) {
+        int redir=redirect_io(arguments, arg_count, &is_redirect_input, &insert_point);
+        if (redir == -1) {
             continue;
         }
 
-        // Re-input if redirected
+        if (redir==1)
+        {
+            handle_command(command, arguments, arg_count, history, &history_line, initial_directory);
+        }
+
+        if (redir==0)
+        {
+            // Re-input if redirected
         if (is_redirect_input == 1) {
             if (!fgets(command_fromfile, sizeof(command_fromfile), stdin)) {
                 break;  // Exit on EOF
@@ -111,6 +121,8 @@ int main() {
 
         // Command execution logic
         handle_command(command, arguments, arg_count, history, &history_line, initial_directory);
+
+        }
     }
 
     printf("######## Quitting Shelldemo ########\n");

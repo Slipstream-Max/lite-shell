@@ -170,7 +170,7 @@ void handle_command(char* command, char** arguments, int arg_count, char** histo
         }
         return;
     }
-
+    
     if (strcmp(arguments[0], "rm2") == 0) {
         add_cmd_his(command, history, history_line);
         if (arg_count < 2) {
@@ -179,8 +179,8 @@ void handle_command(char* command, char** arguments, int arg_count, char** histo
             return;
         }
         if (strcmp(arguments[1], "-r") == 0) {
-            if (arg_count < 2) {
-                perror("not enough argument");
+            if (arg_count < 3) {
+                //perror("not enough argument");
                 log_error(arguments[0], "not enough argument");
                 return;
             }
