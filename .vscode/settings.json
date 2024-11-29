@@ -2,6 +2,8 @@
     "files.associations": {
         "command_exec.h": "c",
         "history_log.h": "c",
-        "pipe_redirect.h": "c"
+        "pipe_redirect.h": "c",
+        "string.h": "c",
+        "stdio.h": "c"
     }
 }

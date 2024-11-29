@@ -73,7 +73,9 @@ int main() {
 
         int arg_count = 0;
         int insert_point = 0;
-        char* token = strtok(command, " ");
+        char command_copy[256];  // 假设最大长度为 256
+        strcpy(command_copy, command);
+        char* token = strtok(command_copy, " ");
         while (token != NULL && arg_count < MAX_NUM_ARGUMENTS) {
             arguments[arg_count++] = token;
             token = strtok(NULL, " ");
@@ -108,7 +110,7 @@ int main() {
         arg_count = (insert_point + 1);
 
         // Command execution logic
-        handle_command(arguments, arg_count, history, &history_line, initial_directory);
+        handle_command(command, arguments, arg_count, history, &history_line, initial_directory);
     }
 
     printf("######## Quitting Shelldemo ########\n");

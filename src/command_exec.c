@@ -15,10 +15,10 @@
 int exec_extern_cmd(char** arguments);
 int remove_folder(char* path);
 
-void handle_command(char** arguments, int arg_count, char** history, int* history_line, char* initial_directory) {
+void handle_command(char* command, char** arguments, int arg_count, char** history, int* history_line, char* initial_directory) {
     char buf[512];
     if (strcmp(arguments[0], "pwd2") == 0) {
-        add_cmd_his(arguments, history, history_line);
+        add_cmd_his(command, history, history_line);
         if (getcwd(buf, sizeof(buf)) == NULL) {
             perror("getcwd failed");
             log_error(arguments[0], "getcwd failed");
@@ -28,13 +28,13 @@ void handle_command(char** arguments, int arg_count, char** history, int* histor
     }
 
     if (strcmp(arguments[0], "echo2") == 0) {
-        add_cmd_his(arguments, history, history_line);
+        add_cmd_his(command, history, history_line);
         printf("%s\n", arguments[1]);
         return;
     }
 
     if (strcmp(arguments[0], "cd2") == 0) {
-        add_cmd_his(arguments, history, history_line);
+        add_cmd_his(command, history, history_line);
         if (arg_count < 2) {
             arguments[1] = initial_directory;
         }
@@ -49,7 +49,7 @@ void handle_command(char** arguments, int arg_count, char** history, int* histor
     }
 
     if (strcmp(arguments[0], "ls2") == 0) {
-        add_cmd_his(arguments, history, history_line);
+        add_cmd_his(command, history, history_line);
         if (arg_count < 2) {
             arguments[1] = ".";
         }
@@ -75,7 +75,7 @@ void handle_command(char** arguments, int arg_count, char** history, int* histor
     }
 
     if (strcmp(arguments[0], "touch2") == 0) {
-        add_cmd_his(arguments, history, history_line);
+        add_cmd_his(command, history, history_line);
         if (arg_count < 2) {
             arguments[1] = "filename";
         }
@@ -91,7 +91,7 @@ void handle_command(char** arguments, int arg_count, char** history, int* histor
     }
 
     if (strcmp(arguments[0], "cat2") == 0) {
-        add_cmd_his(arguments, history, history_line);
+        add_cmd_his(command, history, history_line);
         if (arg_count < 2) {
             perror("not enough argument");
             log_error(arguments[0], "not enough argument");
@@ -118,7 +118,7 @@ void handle_command(char** arguments, int arg_count, char** history, int* histor
     }
 
     if (strcmp(arguments[0], "cp2") == 0) {
-        add_cmd_his(arguments, history, history_line);
+        add_cmd_his(command, history, history_line);
         if (arg_count < 3) {
             perror("not enough argument");
             log_error(arguments[0], "not enough argument");
@@ -158,7 +158,7 @@ void handle_command(char** arguments, int arg_count, char** history, int* histor
     }
 
     if (strcmp(arguments[0], "rename2") == 0) {
-        add_cmd_his(arguments, history, history_line);
+        add_cmd_his(command, history, history_line);
         if (arg_count < 3) {
             perror("not enough argument");
             log_error(arguments[0], "not enough argument");
@@ -172,7 +172,7 @@ void handle_command(char** arguments, int arg_count, char** history, int* histor
     }
 
     if (strcmp(arguments[0], "rm2") == 0) {
-        add_cmd_his(arguments, history, history_line);
+        add_cmd_his(command, history, history_line);
         if (arg_count < 2) {
             perror("not enough argument");
             log_error(arguments[0], "not enough argument");
@@ -201,7 +201,7 @@ void handle_command(char** arguments, int arg_count, char** history, int* histor
         for (int i = 0; i < *history_line; i++) {
             printf("%s\n", history[i]);
         }
-        add_cmd_his(arguments, history, history_line);
+        add_cmd_his(command, history, history_line);
         return;
     }
 
@@ -211,7 +211,7 @@ void handle_command(char** arguments, int arg_count, char** history, int* histor
         printf("Command not found or execution failed: %s\n", arguments[0]);
         log_error(arguments[0], "Command not found or execution failed");
     } else {
-        add_cmd_his(arguments, history, history_line);
+        add_cmd_his(command, history, history_line);
     }
 }
 
